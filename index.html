@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>class1codetest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: black;
+            color: white;
+        }
+        #container {
+            background: url("https://pin.it/1BIa7azRw") no-repeat center center/cover;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color:black;
+        }
+        #riddle-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #riddle-input {
+            font-size: 20px;
+            padding: 10px;
+            width: 300px;
+            border: none;
+            text-align: center;
+            background-color: black;
+            color: white;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .btn {
+            font-size: 20px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+            background: none;
+            color: black;
+            font-weight: bold;
+        }
+        .yes {
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+        .no {
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+        #start-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+        }
+        #start-button {
+            font-size: 20px;
+            padding: 10px 20px;
+            border: 2px solid white;
+            background: none;
+            color: white;
+            cursor: pointer;
+        }
+        #game-container {
+            display: none;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+            cursor: pointer;
+            image-rendering: pixelated;
+        }
+        .cell.taken {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="riddle-screen">
+        <div id="riddle-text">
+             
+            I’m sweet like chocolate, but I’m not to eat. <br>
+            I’m a sign of love, and a gesture so sweet. <br>
+            What am I?
+        </div>
+        <input type="text" id="riddle-input" placeholder="Type your answer here" oninput="checkAnswer()">
+    </div>
+
+    <div id="container" style="display: none;">
+        <div id="question">Will you be my Valentine? ❤️</div>
+        <button class="btn yes" onclick="celebrate()">Yes</button>
+        <button class="btn no" onclick="startTicTacToe()">No</button>
+    </div>
+
+    <div id="start-screen" style="display: none;">
+        <h1>you leave me no choice</h1>
+        <p style="font-size: 24px;">fight me now >:[</p>
+        <button id="start-button" onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="game-container" style="display: none;">
+        <div id="scoreboard">Computer: <span id="computer-score">0</span> | Player: <span id="player-score">0</span></div>
+        <div id="board"></div>
+    </div>
+
+    <script>
+        function checkAnswer() {
+            const answer = document.getElementById("riddle-input").value.trim().toLowerCase();
+            if (answer === "a valentine") {
+                // Hide the riddle and show the "Will you be my Valentine?" question
+                document.getElementById("riddle-screen").style.display = "none";
+                document.getElementById("container").style.display = "flex";
+            }
+        }
+
+        function startTicTacToe() {
+            // Hide Valentine's Day content and show the start screen for the game
+            document.getElementById("container").style.display = "none";
+            document.getElementById("start-screen").style.display = "flex";
+        }
+
+        function startGame() {
+            // Hide the start screen and show the Tic-Tac-Toe game
+            document.getElementById("start-screen").style.display = "none";
+            document.getElementById("game-container").style.display = "block";
+            createBoard();
+        }
+
+        function celebrate() {
+            document.body.innerHTML = `
+                <style>
+                    body {
+                        background: url('bg.png') no-repeat center center/cover;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        text-align: center;
+                    }
+                    #celebrate-text {
+                        font-size: 50px;
+                        font-weight: bold;
+                        color: white;
+                        text-shadow: 3px 3px 5px black;
+                    }
+                </style>
+                <div id="celebrate-text">YIPEEEE!</div>
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnVxdHJ1YzM3OGtsZWswODR6aTJjamxmdW5wcmUzbjU2YW5vZXM5NCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MDJ9IbxxvDUQM/giphy.gif" alt="Celebration" width="300px">
+                 
+            `;
+        }
+
+        let board = ["", "", "", "", "", "", "", "", ""];
+        const player = "💋"; // Player is kiss emoji
+        const computer = "💖"; // Computer is sparkling heart emoji
+        let computerScore = 0;
+        let playerScore = 0;
+
+        function createBoard() {
+            const boardElement = document.getElementById("board");
+            boardElement.innerHTML = "";
+            board.forEach((value, index) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                if (value !== "") cell.classList.add("taken");
+                cell.innerText = value;
+                cell.addEventListener("click", () => playerMove(index));
+                boardElement.appendChild(cell);
+            });
+        }
+
+        function playerMove(index) {
+            if (board[index] !== "") return;
+
+            board[index] = player;
+            createBoard();
+
+            if (checkWinner(player)) {
+                board[index] = ""; // CHEATING: REMOVE PLAYER WINNING MOVE
+            }
+
+            setTimeout(computerMove, 500);
+        }
+
+        function computerMove() {
+            let winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+
+            for (let pattern of winPatterns) {
+                let count = pattern.filter(index => board[index] === computer).length;
+                if (count === 2) {
+                    let emptySpot = pattern.find(index => board[index] === "");
+                    if (emptySpot !== undefined) {
+                        board[emptySpot] = computer;
+                        createBoard();
+                        setTimeout(endGame, 500);
+                        return;
+                    }
+                }
+            }
+
+            board.sort(() => Math.random() - 0.5);
+            let available = board.map((v, i) => v === "" ? i : -1).filter(v => v !== -1);
+
+            if (available.length > 0) {
+                board[available[0]] = computer;
+            } else {
+                addExtraBox();
+            }
+
+            createBoard();
+
+            if (checkWinner(computer)) {
+                setTimeout(endGame, 500);
+            }
+        }
+
+        function checkWinner(mark) {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8],
+                [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                [0, 4, 8], [2, 4, 6]
+            ];
+            return winPatterns.some(pattern => 
+                pattern.every(index => board[index] === mark)
+            );
+        }
+
+        function addExtraBox() {
+            board.push(computer);
+            document.getElementById("board").style.gridTemplateColumns = `repeat(${Math.ceil(board.length / 3)}, 100px)`;
+            createBoard();
+        }
+
+        function endGame() {
+            computerScore++;
+            document.getElementById("computer-score").innerText = computerScore;
+
+            setTimeout(() => {
+                document.body.innerHTML = `
+                    <style>
+                        body {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            background-color: black;
+                        }
+                        #loser-text {
+                            font-size: 30px;
+                            font-weight: bold;
+                            color: white;
+                            text-shadow: 3px 3px 5px black;
+                        }
+                    </style>
+                    <div id="loser-text">:p ye that's what i thought</div>
+                    <img src="https://media.giphy.com/media/NcADKTwnxOeszkTsLv/giphy.gif?cid=ecf05e473ya6ac6bquzc1hlh6oecq7ou9z57alaok32nv8xf&ep=v1_gifs_search&rid=giphy.gif&ct=g">
+                `;
+                
+            }, 500);
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
